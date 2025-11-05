@@ -34,3 +34,21 @@ export function handleAPIError(error: APIError) {
 // 1. Create a new ValidationError class
 // 2. Create a new function that handles Validation errors
 // 3. Use it to throw errors in your discountCalculator and calculateTax utils functions
+
+export class ValidationError extends Error {
+    statusCode: number;
+
+    constructor(message: string, statusCode: number) {
+        super(message);
+        this.statusCode = statusCode;
+    }
+
+}
+
+export function handleValidationError(error: ValidationError) {
+    if (error instanceof ValidationError) {
+        console.error('Validation Error:', error.message, 'Status Code:', error.statusCode);
+    } else {
+        console.error('An unexpected error occurred:', error);
+    }
+}

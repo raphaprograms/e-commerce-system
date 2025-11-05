@@ -1,4 +1,4 @@
-import { handleAPIError, APIError } from "../utils/errorHandler";
+import { handleAPIError, APIError, ValidationError, handleValidationError } from "../utils/errorHandler";
 
 const BASE_URL ='https://dummyjson.com';
 
@@ -18,10 +18,18 @@ export async function getProducts(limit: number = 30) {
         // parse the data and return it
         const data = await response.json();
         // console.log('DATA: ', data);
+
+        if (!data) {
+            throw new ValidationError('Error validating data from API.', data.status);
+        }
         
         return data.products;
 
-    } catch (error: APIError | any) {
+    } catch (error: APIError | ValidationError | any) {
+       if (APIError){
         handleAPIError(error);
+       } else if (ValidationError) {
+        handleValidationError(error);
+       }
     }
 }
